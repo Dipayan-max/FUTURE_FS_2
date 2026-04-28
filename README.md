@@ -187,8 +187,8 @@ ULTRA-CRM/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/your-username/ultra-crm.git
-cd ultra-crm
+https://github.com/Dipayan-max/FUTURE_FS_2.git
+cd FUTURE_FS_2
 ```
 
 ### 2. Install Dependencies
@@ -202,7 +202,7 @@ npm install
 Create a `.env` file in the root directory:
 
 ```env
-MONGO_URI=mongodb://localhost:27017/ultra-crm
+MONGO_URI=mongodb:your_mongodb_connection_string_here
 SESSION_SECRET=your-secret-key-here
 PORT=3000
 ```
