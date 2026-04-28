@@ -1,0 +1,193 @@
+<div class="crm-wrapper">
+  <%- include('../partials/sidebar', { active: 'customers' }) %>
+
+  <div class="crm-main">
+    <%- include('../partials/topbar', { pageTitle: 'Customers', pageSubtitle: 'Manage your customer relationships' }) %>
+
+    <div class="crm-content">
+      <%- include('../partials/messages') %>
+
+      <!-- Summary Cards -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="stat-label">Total Customers</p>
+                <h3 class="stat-value mb-0"><%= summary.total %></h3>
+              </div>
+              <div class="stat-icon bg-primary-subtle"><i class="bi bi-people-fill text-primary"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="stat-label">Active</p>
+                <h3 class="stat-value mb-0"><%= summary.activeCount %></h3>
+              </div>
+              <div class="stat-icon bg-success-subtle"><i class="bi bi-check-circle-fill text-success"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <p class="stat-label">Total Revenue</p>
+                <h3 class="stat-value mb-0">$<%= summary.totalRevenue.toLocaleString() %></h3>
+              </div>
+              <div class="stat-icon bg-warning-subtle"><i class="bi bi-currency-dollar text-warning"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Header Bar -->
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+          <div class="topbar-search">
+            <i class="bi bi-search"></i>
+            <input type="text" class="form-control" placeholder="Search customers..."
+                   value="<%= search %>"
+                   onkeydown="if(event.key==='Enter') window.location.href='/customers?search='+this.value+'&status=<%= currentStatus %>'" />
+          </div>
+          <div class="d-flex gap-1 flex-wrap">
+            <a href="/customers?search=<%= search %>" class="badge rounded-pill text-decoration-none py-2 px-3 <%= currentStatus==='all' ? 'bg-primary' : 'bg-dark border border-secondary' %>">All</a>
+            <a href="/customers?status=active&search=<%= search %>" class="badge rounded-pill text-decoration-none py-2 px-3 <%= currentStatus==='active' ? 'bg-primary' : 'bg-dark border border-secondary' %>">Active</a>
+            <a href="/customers?status=inactive&search=<%= search %>" class="badge rounded-pill text-decoration-none py-2 px-3 <%= currentStatus==='inactive' ? 'bg-primary' : 'bg-dark border border-secondary' %>">Inactive</a>
+            <a href="/customers?status=churned&search=<%= search %>" class="badge rounded-pill text-decoration-none py-2 px-3 <%= currentStatus==='churned' ? 'bg-primary' : 'bg-dark border border-secondary' %>">Churned</a>
+          </div>
+        </div>
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+          <i class="bi bi-plus-lg me-1"></i>Add Customer
+        </button>
+      </div>
+
+      <!-- Customers Grid -->
+      <% if (customers.length > 0) { %>
+        <div class="row g-4">
+          <% customers.forEach(function(cust) { %>
+            <div class="col-sm-6 col-lg-4 col-xl-3">
+              <a href="/customers/<%= cust._id %>" class="text-decoration-none">
+                <div class="dash-card customer-card">
+                  <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="customer-avatar">
+                      <%= cust.name.charAt(0).toUpperCase() %>
+                    </div>
+                    <div class="flex-grow-1 overflow-hidden">
+                      <h6 class="fw-bold text-white mb-0 text-truncate"><%= cust.name %></h6>
+                      <small class="text-secondary text-truncate d-block"><%= cust.company || 'No company' %></small>
+                    </div>
+                    <span class="badge rounded-pill
+                      <% if (cust.status==='active') { %>bg-success-subtle text-success
+                      <% } else if (cust.status==='inactive') { %>bg-secondary-subtle text-secondary
+                      <% } else { %>bg-danger-subtle text-danger<% } %>
+                    " style="font-size:0.65rem;"><%= cust.status %></span>
+                  </div>
+                  <div class="d-flex flex-column gap-1 mb-3">
+                    <small class="text-secondary text-truncate"><i class="bi bi-envelope me-2"></i><%= cust.email || '—' %></small>
+                    <small class="text-secondary text-truncate"><i class="bi bi-telephone me-2"></i><%= cust.phone || '—' %></small>
+                  </div>
+                  <div class="d-flex justify-content-between align-items-center pt-2 border-top border-secondary border-opacity-10">
+                    <small class="text-secondary">Revenue</small>
+                    <span class="fw-bold text-white small">$<%= (cust.totalRevenue || 0).toLocaleString() %></span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          <% }); %>
+        </div>
+      <% } else { %>
+        <div class="dash-card text-center py-5">
+          <i class="bi bi-people text-secondary" style="font-size:2.5rem;opacity:0.4;"></i>
+          <p class="text-secondary mt-2 mb-3">No customers found</p>
+          <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">Add First Customer</button>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<!-- ========== ADD CUSTOMER MODAL ========== -->
+<div class="modal fade" id="addCustomerModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-dark border-secondary border-opacity-25" style="border-radius:16px;">
+      <div class="modal-header border-secondary border-opacity-10">
+        <h5 class="modal-title fw-bold"><i class="bi bi-person-plus me-2 text-primary"></i>Add Customer</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <form action="/customers" method="POST">
+        <div class="modal-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <label class="form-label small text-secondary">Name *</label>
+              <input type="text" name="name" class="form-control bg-dark border-secondary border-opacity-25 text-white" required />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small text-secondary">Email</label>
+              <input type="email" name="email" class="form-control bg-dark border-secondary border-opacity-25 text-white" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small text-secondary">Phone</label>
+              <input type="text" name="phone" class="form-control bg-dark border-secondary border-opacity-25 text-white" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small text-secondary">Company</label>
+              <input type="text" name="company" class="form-control bg-dark border-secondary border-opacity-25 text-white" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small text-secondary">Status</label>
+              <select name="status" class="form-select bg-dark border-secondary border-opacity-25 text-white">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="churned">Churned</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small text-secondary">Revenue ($)</label>
+              <input type="number" name="totalRevenue" class="form-control bg-dark border-secondary border-opacity-25 text-white" value="0" min="0" />
+            </div>
+            <div class="col-md-6">
+              <label class="form-label small text-secondary">Address</label>
+              <input type="text" name="address" class="form-control bg-dark border-secondary border-opacity-25 text-white" />
+            </div>
+            <div class="col-12">
+              <label class="form-label small text-secondary">Notes</label>
+              <textarea name="notes" rows="2" class="form-control bg-dark border-secondary border-opacity-25 text-white"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer border-secondary border-opacity-10">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  .customer-card {
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    cursor: pointer;
+  }
+  .customer-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(99,102,241,0.2) !important;
+  }
+  .customer-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.1rem;
+    color: #fff;
+    flex-shrink: 0;
+  }
+</style>

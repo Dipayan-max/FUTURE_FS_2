@@ -1,0 +1,76 @@
+<div class="app-wrapper">
+  <%- include('../partials/sidebar', { active: 'contacts' }) %>
+
+  <main class="main-content">
+    <%- include('../partials/mobile-header', { pageTitle: 'Contacts' }) %>
+    <%- include('../partials/messages') %>
+
+    <div class="page-header">
+      <h1>Contacts</h1>
+      <a href="/contacts/add" class="btn btn-primary">+ New Contact</a>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <input type="text" class="form-control search-input" id="searchInput"
+             placeholder="Search contacts..." value="<%= search %>"
+             onkeydown="if(event.key==='Enter'){window.location.href='/contacts?search='+this.value+'&status=<%= currentStatus %>'}" />
+      <div class="filter-pills">
+        <a href="/contacts?search=<%= search %>" class="filter-pill <%= currentStatus === 'all' ? 'active' : '' %>">All</a>
+        <a href="/contacts?status=lead&search=<%= search %>" class="filter-pill <%= currentStatus === 'lead' ? 'active' : '' %>">Leads</a>
+        <a href="/contacts?status=prospect&search=<%= search %>" class="filter-pill <%= currentStatus === 'prospect' ? 'active' : '' %>">Prospects</a>
+        <a href="/contacts?status=customer&search=<%= search %>" class="filter-pill <%= currentStatus === 'customer' ? 'active' : '' %>">Customers</a>
+        <a href="/contacts?status=inactive&search=<%= search %>" class="filter-pill <%= currentStatus === 'inactive' ? 'active' : '' %>">Inactive</a>
+      </div>
+    </div>
+
+    <% if (contacts.length > 0) { %>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Company</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% contacts.forEach(function(contact) { %>
+              <tr>
+                <td style="color: var(--text-primary); font-weight: 500;">
+                  <%= contact.firstName %> <%= contact.lastName %>
+                </td>
+                <td><%= contact.email || '—' %></td>
+                <td><%= contact.phone || '—' %></td>
+                <td><%= contact.company || '—' %></td>
+                <td>
+                  <span class="badge badge-<%= contact.status %>"><%= contact.status %></span>
+                </td>
+                <td><%= new Date(contact.createdAt).toLocaleDateString() %></td>
+                <td>
+                  <div class="btn-group">
+                    <a href="/contacts/<%= contact._id %>" class="btn btn-secondary btn-sm">View</a>
+                    <a href="/contacts/<%= contact._id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    <% } else { %>
+      <div class="card">
+        <div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <h3>No contacts found</h3>
+          <p>Try adjusting your filters or add a new contact.</p>
+          <a href="/contacts/add" class="btn btn-primary" style="margin-top: 1rem;">Add Contact</a>
+        </div>
+      </div>
+    <% } %>
+  </main>
+</div>

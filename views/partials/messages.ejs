@@ -1,0 +1,35 @@
+<% if (typeof errors !== 'undefined' && errors && errors.length > 0) { %>
+  <% errors.forEach(function(err) { %>
+    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-2"></i><%= err.msg %></div>
+  <% }); %>
+<% } %>
+
+<% if (typeof success_msg !== 'undefined' && success_msg && success_msg.length > 0) { %>
+  <% if (Array.isArray(success_msg)) { %>
+    <% success_msg.forEach(function(msg) { if (msg) { %>
+      <div class="alert alert-success"><i class="bi bi-check-circle me-2"></i><%= msg %></div>
+    <% } }); %>
+  <% } else if (success_msg) { %>
+    <div class="alert alert-success"><i class="bi bi-check-circle me-2"></i><%= success_msg %></div>
+  <% } %>
+<% } %>
+
+<% if (typeof error_msg !== 'undefined' && error_msg && error_msg.length > 0) { %>
+  <% if (Array.isArray(error_msg)) { %>
+    <% error_msg.forEach(function(msg) { if (msg) { %>
+      <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-2"></i><%= msg %></div>
+    <% } }); %>
+  <% } else if (error_msg) { %>
+    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-2"></i><%= error_msg %></div>
+  <% } %>
+<% } %>
+
+<% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+  <% if (Array.isArray(error)) { %>
+    <% error.forEach(function(msg) { if (msg) { %>
+      <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-2"></i><%= msg %></div>
+    <% } }); %>
+  <% } else if (error) { %>
+    <div class="alert alert-danger"><i class="bi bi-exclamation-triangle me-2"></i><%= error %></div>
+  <% } %>
+<% } %>

@@ -1,0 +1,10 @@
+<div class="error-page">
+  <div>
+    <h1 style="font-size: 4rem; margin-bottom: 0.5rem;">⚠️</h1>
+    <h2>Something went wrong</h2>
+    <p style="color: var(--text-muted); margin: 1rem 0;">
+      <%= typeof message !== 'undefined' ? message : 'An unexpected error occurred.' %>
+    </p>
+    <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+  </div>
+</div>

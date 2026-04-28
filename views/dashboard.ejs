@@ -1,0 +1,236 @@
+<div class="crm-wrapper">
+  <%- include('partials/sidebar', { active: 'dashboard' }) %>
+
+  <div class="crm-main">
+    <%- include('partials/topbar', { pageTitle: 'Dashboard', pageSubtitle: 'Welcome back, ' + user.name }) %>
+
+    <div class="crm-content">
+      <%- include('partials/messages') %>
+
+      <!-- Stat Cards -->
+      <div class="row g-4 mb-4">
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <p class="stat-label">Total Leads</p>
+                <h2 class="stat-value"><%= stats.leads %></h2>
+                <span class="stat-trend up"><i class="bi bi-arrow-up-short"></i>12% this month</span>
+              </div>
+              <div class="stat-icon bg-primary-subtle">
+                <i class="bi bi-funnel-fill text-primary"></i>
+              </div>
+            </div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="width:65%;background:var(--bs-primary)"></div></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <p class="stat-label">Revenue</p>
+                <h2 class="stat-value">$48.2K</h2>
+                <span class="stat-trend up"><i class="bi bi-arrow-up-short"></i>8% this month</span>
+              </div>
+              <div class="stat-icon bg-success-subtle">
+                <i class="bi bi-currency-dollar text-success"></i>
+              </div>
+            </div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="width:78%;background:var(--bs-success)"></div></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <p class="stat-label">Customers</p>
+                <h2 class="stat-value"><%= stats.customers %></h2>
+                <span class="stat-trend up"><i class="bi bi-arrow-up-short"></i>5% this month</span>
+              </div>
+              <div class="stat-icon bg-info-subtle">
+                <i class="bi bi-people-fill text-info"></i>
+              </div>
+            </div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="width:52%;background:var(--bs-info)"></div></div>
+          </div>
+        </div>
+        <div class="col-sm-6 col-xl-3">
+          <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <p class="stat-label">Deals</p>
+                <h2 class="stat-value"><%= stats.prospects %></h2>
+                <span class="stat-trend down"><i class="bi bi-arrow-down-short"></i>3% this month</span>
+              </div>
+              <div class="stat-icon bg-warning-subtle">
+                <i class="bi bi-trophy-fill text-warning"></i>
+              </div>
+            </div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="width:40%;background:var(--bs-warning)"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="row g-4 mb-4">
+        <div class="col-lg-8">
+          <div class="dash-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="fw-bold text-white mb-0">Revenue Overview</h6>
+              <div class="btn-group btn-group-sm">
+                <button class="btn btn-outline-secondary active">Week</button>
+                <button class="btn btn-outline-secondary">Month</button>
+                <button class="btn btn-outline-secondary">Year</button>
+              </div>
+            </div>
+            <div style="position:relative;height:220px;"><canvas id="revenueChart"></canvas></div>
+          </div>
+        </div>
+        <div class="col-lg-4">
+          <div class="dash-card">
+            <h6 class="fw-bold text-white mb-3">Lead Sources</h6>
+            <div style="position:relative;height:220px;"><canvas id="sourceChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity + Quick Actions -->
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <div class="dash-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="fw-bold text-white mb-0">Recent Contacts</h6>
+              <a href="/contacts" class="btn btn-sm btn-outline-primary">View All</a>
+            </div>
+
+            <% if (recentContacts.length > 0) { %>
+              <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-secondary small text-uppercase">Name</th>
+                      <th class="text-secondary small text-uppercase">Email</th>
+                      <th class="text-secondary small text-uppercase">Company</th>
+                      <th class="text-secondary small text-uppercase">Status</th>
+                      <th class="text-secondary small text-uppercase"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% recentContacts.forEach(function(c) { %>
+                      <tr>
+                        <td class="fw-semibold"><%= c.firstName %> <%= c.lastName %></td>
+                        <td class="text-secondary"><%= c.email || '—' %></td>
+                        <td class="text-secondary"><%= c.company || '—' %></td>
+                        <td>
+                          <span class="badge rounded-pill
+                            <% if (c.status==='lead') { %>bg-warning-subtle text-warning
+                            <% } else if (c.status==='prospect') { %>bg-info-subtle text-info
+                            <% } else if (c.status==='customer') { %>bg-success-subtle text-success
+                            <% } else { %>bg-secondary-subtle text-secondary<% } %>
+                          "><%= c.status %></span>
+                        </td>
+                        <td><a href="/contacts/<%= c._id %>" class="btn btn-sm btn-outline-secondary py-0 px-2">View</a></td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
+              </div>
+            <% } else { %>
+              <div class="text-center py-5">
+                <i class="bi bi-people text-secondary" style="font-size:2.5rem;opacity:0.4;"></i>
+                <p class="text-secondary mt-2 mb-3">No contacts yet</p>
+                <a href="/contacts/add" class="btn btn-sm btn-primary">Add First Contact</a>
+              </div>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Recent Activity Feed -->
+        <div class="col-lg-4">
+          <div class="dash-card">
+            <h6 class="fw-bold text-white mb-3">Recent Activity</h6>
+            <div class="activity-feed">
+              <% if (recentContacts.length > 0) { %>
+                <% recentContacts.forEach(function(c) { %>
+                  <div class="activity-item">
+                    <div class="activity-dot"></div>
+                    <div>
+                      <p class="mb-0 small text-white">
+                        New <span class="fw-semibold"><%= c.status %></span> added
+                      </p>
+                      <p class="mb-0 small text-secondary">
+                        <%= c.firstName %> <%= c.lastName %><% if (c.company) { %> &middot; <%= c.company %><% } %>
+                      </p>
+                      <p class="mb-0 text-muted" style="font-size:0.7rem;">
+                        <%= new Date(c.createdAt).toLocaleDateString('en-US', {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) %>
+                      </p>
+                    </div>
+                  </div>
+                <% }); %>
+              <% } else { %>
+                <p class="text-secondary small text-center py-3">No recent activity</p>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script>
+  // Revenue bar chart
+  const rCtx = document.getElementById('revenueChart');
+  if (rCtx) {
+    new Chart(rCtx, {
+      type: 'bar',
+      data: {
+        labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+        datasets: [{
+          label: 'Revenue ($)',
+          data: [4200, 5800, 4900, 7200, 6100, 3800, 5400],
+          backgroundColor: 'rgba(99,102,241,0.6)',
+          borderRadius: 8,
+          borderSkipped: false,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: '#64748b' } },
+          y: { grid: { color: 'rgba(148,163,184,0.08)' }, ticks: { color: '#64748b', callback: v => '$'+v/1000+'k' } }
+        }
+      }
+    });
+  }
+
+  // Lead sources doughnut
+  const sCtx = document.getElementById('sourceChart');
+  if (sCtx) {
+    new Chart(sCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Website','Referral','Social','Email','Other'],
+        datasets: [{
+          data: [35, 25, 20, 12, 8],
+          backgroundColor: ['#6366f1','#0ea5e9','#8b5cf6','#10b981','#64748b'],
+          borderWidth: 0,
+          spacing: 3,
+          borderRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '68%',
+        plugins: {
+          legend: { position: 'bottom', labels: { color: '#94a3b8', padding: 12, usePointStyle: true, pointStyleWidth: 8 } }
+        }
+      }
+    });
+  }
+</script>

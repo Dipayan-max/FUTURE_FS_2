@@ -1,0 +1,209 @@
+<div class="crm-wrapper">
+  <%- include('partials/sidebar', { active: 'settings' }) %>
+
+  <div class="crm-main">
+    <%- include('partials/topbar', { pageTitle: 'Settings', pageSubtitle: 'Manage your account preferences' }) %>
+
+    <div class="crm-content">
+      <%- include('partials/messages') %>
+
+      <div class="row g-4">
+
+        <!-- ========== LEFT: Profile & Password ========== -->
+        <div class="col-lg-8">
+
+          <!-- Profile Card -->
+          <div class="dash-card mb-4" style="height:auto;">
+            <div class="d-flex align-items-center gap-2 mb-4">
+              <div class="settings-icon bg-primary-subtle"><i class="bi bi-person-fill text-primary"></i></div>
+              <div>
+                <h6 class="fw-bold text-white mb-0">Profile Information</h6>
+                <small class="text-secondary">Update your name and email address</small>
+              </div>
+            </div>
+            <form action="/settings/profile" method="POST">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label small text-secondary">Full Name</label>
+                  <input type="text" name="name" class="form-control bg-dark border-secondary border-opacity-25 text-white"
+                         value="<%= profile.name %>" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small text-secondary">Email Address</label>
+                  <input type="email" name="email" class="form-control bg-dark border-secondary border-opacity-25 text-white"
+                         value="<%= profile.email %>" required />
+                </div>
+                <div class="col-12 d-flex justify-content-end">
+                  <button type="submit" class="btn btn-primary px-4">
+                    <i class="bi bi-check-lg me-1"></i>Save Changes
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!-- Change Password Card -->
+          <div class="dash-card" style="height:auto;">
+            <div class="d-flex align-items-center gap-2 mb-4">
+              <div class="settings-icon bg-warning-subtle"><i class="bi bi-shield-lock-fill text-warning"></i></div>
+              <div>
+                <h6 class="fw-bold text-white mb-0">Change Password</h6>
+                <small class="text-secondary">Ensure your account stays secure</small>
+              </div>
+            </div>
+            <form action="/settings/password" method="POST">
+              <div class="row g-3">
+                <div class="col-12">
+                  <label class="form-label small text-secondary">Current Password</label>
+                  <input type="password" name="currentPassword" class="form-control bg-dark border-secondary border-opacity-25 text-white"
+                         placeholder="Enter current password" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small text-secondary">New Password</label>
+                  <input type="password" name="newPassword" id="newPassword" class="form-control bg-dark border-secondary border-opacity-25 text-white"
+                         placeholder="Min 6 characters" minlength="6" required />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label small text-secondary">Confirm New Password</label>
+                  <input type="password" name="confirmPassword" id="confirmPassword" class="form-control bg-dark border-secondary border-opacity-25 text-white"
+                         placeholder="Re-enter new password" minlength="6" required />
+                </div>
+                <div class="col-12">
+                  <div class="password-strength" id="passwordStrength"></div>
+                </div>
+                <div class="col-12 d-flex justify-content-end">
+                  <button type="submit" class="btn btn-warning text-dark px-4">
+                    <i class="bi bi-shield-check me-1"></i>Update Password
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ========== RIGHT: Preferences ========== -->
+        <div class="col-lg-4">
+
+          <!-- Account Overview -->
+          <div class="dash-card mb-4" style="height:auto;">
+            <div class="text-center mb-3">
+              <div class="settings-avatar mx-auto mb-3">
+                <%= profile.name.charAt(0).toUpperCase() %>
+              </div>
+              <h5 class="fw-bold text-white mb-1"><%= profile.name %></h5>
+              <p class="text-secondary small mb-2"><%= profile.email %></p>
+              <span class="badge bg-primary-subtle text-primary rounded-pill px-3">
+                <%= profile.role || 'User' %>
+              </span>
+            </div>
+            <hr class="border-secondary border-opacity-10" />
+            <div class="d-flex flex-column gap-2">
+              <div class="d-flex justify-content-between">
+                <small class="text-secondary">Member since</small>
+                <small class="text-white"><%= new Date(profile.createdAt).toLocaleDateString('en-US', {month:'short',day:'numeric',year:'numeric'}) %></small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Appearance -->
+          <div class="dash-card mb-4" style="height:auto;">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <div class="settings-icon bg-info-subtle"><i class="bi bi-palette-fill text-info"></i></div>
+              <h6 class="fw-bold text-white mb-0">Appearance</h6>
+            </div>
+            <div class="d-flex justify-content-between align-items-center py-2">
+              <div>
+                <p class="text-white small fw-semibold mb-0">Dark Mode</p>
+                <small class="text-secondary">Toggle interface theme</small>
+              </div>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="darkModeToggle" checked style="width:3rem;height:1.5rem;cursor:pointer;" />
+              </div>
+            </div>
+            <hr class="border-secondary border-opacity-10 my-2" />
+            <div class="d-flex justify-content-between align-items-center py-2">
+              <div>
+                <p class="text-white small fw-semibold mb-0">Compact View</p>
+                <small class="text-secondary">Reduce spacing in tables</small>
+              </div>
+              <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="compactToggle" style="width:3rem;height:1.5rem;cursor:pointer;" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Danger Zone -->
+          <div class="dash-card" style="height:auto;border-color:rgba(239,68,68,0.15);">
+            <div class="d-flex align-items-center gap-2 mb-3">
+              <div class="settings-icon bg-danger-subtle"><i class="bi bi-exclamation-triangle-fill text-danger"></i></div>
+              <h6 class="fw-bold text-white mb-0">Session</h6>
+            </div>
+            <p class="text-secondary small mb-3">Sign out of your account on this device.</p>
+            <a href="/auth/logout" class="btn btn-outline-danger w-100">
+              <i class="bi bi-box-arrow-right me-2"></i>Logout
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== PASSWORD STRENGTH METER ==========
+const newPwdInput = document.getElementById('newPassword');
+const strengthEl = document.getElementById('passwordStrength');
+
+if (newPwdInput) {
+  newPwdInput.addEventListener('input', function() {
+    const val = this.value;
+    let score = 0;
+    if (val.length >= 6) score++;
+    if (val.length >= 10) score++;
+    if (/[A-Z]/.test(val)) score++;
+    if (/[0-9]/.test(val)) score++;
+    if (/[^A-Za-z0-9]/.test(val)) score++;
+
+    const levels = [
+      { label: '', color: 'transparent', width: '0%' },
+      { label: 'Weak', color: '#ef4444', width: '20%' },
+      { label: 'Fair', color: '#f59e0b', width: '40%' },
+      { label: 'Good', color: '#eab308', width: '60%' },
+      { label: 'Strong', color: '#22c55e', width: '80%' },
+      { label: 'Very Strong', color: '#10b981', width: '100%' },
+    ];
+
+    const lvl = levels[score] || levels[0];
+    strengthEl.innerHTML = val ?
+      '<div class="d-flex justify-content-between align-items-center mb-1"><small class="text-secondary">Password strength</small><small style="color:' + lvl.color + '">' + lvl.label + '</small></div>' +
+      '<div style="height:4px;border-radius:4px;background:rgba(148,163,184,0.1);overflow:hidden;"><div style="height:100%;width:' + lvl.width + ';background:' + lvl.color + ';border-radius:4px;transition:all 0.3s ease;"></div></div>'
+      : '';
+  });
+}
+</script>
+
+<style>
+  .settings-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+  .settings-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: #fff;
+  }
+</style>
+

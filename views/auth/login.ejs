@@ -1,0 +1,146 @@
+<div class="auth-page">
+  <!-- Animated background -->
+  <div class="auth-bg-orb auth-bg-orb-1"></div>
+  <div class="auth-bg-orb auth-bg-orb-2"></div>
+  <div class="auth-bg-orb auth-bg-orb-3"></div>
+  <div class="auth-grid-overlay"></div>
+
+  <div class="auth-container">
+    <div class="auth-split">
+
+      <!-- LEFT: Feature Panel (hidden on mobile) -->
+      <div class="auth-feature-panel d-none d-lg-flex">
+        <div class="auth-feature-content">
+          <div class="auth-feature-badge">
+            <i class="bi bi-lightning-charge-fill me-1"></i>ULTRA CRM
+          </div>
+          <h2 class="auth-feature-title">Welcome back to<br/>your workspace</h2>
+          <p class="auth-feature-desc">Manage leads, track revenue, and grow your business — all from one powerful dashboard.</p>
+          
+          <div class="auth-feature-stats">
+            <div class="auth-feature-stat">
+              <div class="auth-feature-stat-value">10K+</div>
+              <div class="auth-feature-stat-label">Active Users</div>
+            </div>
+            <div class="auth-feature-stat">
+              <div class="auth-feature-stat-value">98%</div>
+              <div class="auth-feature-stat-label">Uptime</div>
+            </div>
+            <div class="auth-feature-stat">
+              <div class="auth-feature-stat-value">4.9★</div>
+              <div class="auth-feature-stat-label">Rating</div>
+            </div>
+          </div>
+
+          <div class="auth-feature-testimonial">
+            <p>"ULTRA CRM transformed how we handle our sales pipeline. Revenue grew 40% in the first quarter."</p>
+            <div class="auth-testimonial-author">
+              <div class="auth-testimonial-avatar">JD</div>
+              <div>
+                <strong>Jane Doe</strong>
+                <span>VP Sales, TechCorp</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Login Form -->
+      <div class="auth-form-panel">
+        <div class="auth-form-inner">
+
+          <!-- Mobile-only brand -->
+          <div class="text-center mb-4 d-lg-none auth-fade-in" style="animation-delay:0.1s">
+            <div class="auth-logo-wrap mx-auto mb-3">
+              <i class="bi bi-lightning-charge-fill"></i>
+            </div>
+          </div>
+
+          <div class="auth-fade-in" style="animation-delay:0.15s">
+            <h1 class="auth-form-title">Sign in</h1>
+            <p class="auth-form-subtitle">Enter your credentials to access your dashboard</p>
+          </div>
+
+          <!-- Flash Messages -->
+          <div class="auth-fade-in" style="animation-delay:0.2s">
+            <%- include('../partials/messages') %>
+          </div>
+
+          <!-- Form -->
+          <div class="auth-fade-in" style="animation-delay:0.3s">
+            <form action="/auth/login" method="POST" class="needs-validation" novalidate>
+
+              <!-- Email -->
+              <div class="auth-field">
+                <label class="auth-field-label" for="email">Email address</label>
+                <div class="auth-input-wrap">
+                  <i class="bi bi-envelope auth-input-icon"></i>
+                  <input type="email" class="auth-input" id="email" name="email"
+                         placeholder="you@company.com" required />
+                </div>
+                <div class="invalid-feedback">Please enter a valid email.</div>
+              </div>
+
+              <!-- Password -->
+              <div class="auth-field">
+                <div class="d-flex justify-content-between align-items-center">
+                  <label class="auth-field-label" for="password">Password</label>
+                </div>
+                <div class="auth-input-wrap">
+                  <i class="bi bi-lock auth-input-icon"></i>
+                  <input type="password" class="auth-input" id="password" name="password"
+                         placeholder="Min 6 characters" required minlength="6" />
+                  <button type="button" class="auth-toggle-pw" onclick="togglePassword('password', this)" tabindex="-1">
+                    <i class="bi bi-eye-slash"></i>
+                  </button>
+                </div>
+                <div class="invalid-feedback">Password must be at least 6 characters.</div>
+              </div>
+
+              <!-- Remember -->
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="remember" />
+                  <label class="form-check-label small text-secondary" for="remember">Remember me</label>
+                </div>
+              </div>
+
+              <!-- Submit -->
+              <button type="submit" class="btn auth-btn w-100">
+                <span class="auth-btn-text">Sign In <i class="bi bi-arrow-right ms-1"></i></span>
+                <span class="auth-btn-loader d-none">
+                  <span class="spinner-border spinner-border-sm me-2"></span>Signing in...
+                </span>
+              </button>
+            </form>
+
+
+          </div>
+
+          <!-- Footer -->
+          <p class="text-center text-secondary small mt-4 auth-fade-in" style="animation-delay:0.5s">
+            Don&rsquo;t have an account?
+            <a href="/auth/register" class="auth-link fw-semibold">Create one free</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePassword(id, btn) {
+  const input = document.getElementById(id);
+  const icon = btn.querySelector('i');
+  if (input.type === 'password') { input.type = 'text'; icon.className = 'bi bi-eye'; }
+  else { input.type = 'password'; icon.className = 'bi bi-eye-slash'; }
+}
+(function () {
+  const forms = document.querySelectorAll('.needs-validation');
+  forms.forEach(f => f.addEventListener('submit', e => {
+    if (!f.checkValidity()) { e.preventDefault(); e.stopPropagation(); }
+    else { f.querySelector('.auth-btn-text').classList.add('d-none'); f.querySelector('.auth-btn-loader').classList.remove('d-none'); }
+    f.classList.add('was-validated');
+  }));
+})();
+</script>
