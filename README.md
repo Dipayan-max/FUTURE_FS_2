@@ -209,8 +209,8 @@ PORT=3000
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `MONGO_URI` | MongoDB connection string | `mongodb://localhost:27017/ultra-crm` |
-| `SESSION_SECRET` | Secret key for session encryption | — |
+| `MONGO_URI` | MongoDB connection string | `mongodb_connection_string_here` |
+| `SESSION_SECRET` | Secret key for session encryption | your_secret_key_here |
 | `PORT` | Server port | `3000` |
 
 ### 4. Start the Application
